@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" >
+<html lang="en" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>All users</title>
+</head>
+<body>
+<table border="1" BorderCOLOR=”#006600” width="600" BGCOLOR="#FFFFCC">
+    <tr>
+        <th>name</th>
+        <th>surname</th>
+        <th>email</th>
+        <th>operations</th>
+    </tr>
+    <div th:each="user : ${user}">
+        <td th:text="${user.name}">данные</td>
+        <td th:text="${user.lastName}">данные</td>
+        <td th:text="${user.email}">данные</td>
+        <td>
+            <form th:action="@{/{id}/updateInfo(id=${user.id})}">
+                <input type="submit" value="Update">
+            </form>
+        </td>
+        <td>
+            <form th:method="DELETE" th:action="@{/{id}(id=${user.id})}">
+                <input type="submit" value="Delete">
+            </form>
+        </td>
+
+        </tr>
+    </div>
+</table>
+</body>
+</html>
