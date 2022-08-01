@@ -2,7 +2,6 @@ package web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +12,9 @@ import javax.validation.Valid;
 import java.util.List;
 
 @Controller
-@Transactional
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
 
     @Autowired
     public UserController(UserService userService) {
@@ -45,8 +43,12 @@ public class UserController {
 
     @PostMapping("/createNewUser")
     public String createNewUser(@ModelAttribute("user") @Valid User user, BindingResult result) {
-        userService.save(user);
-        return "redirect:/";
+        if (result.hasErrors()) {
+            return "newUser";
+        } else {
+            userService.save(user);
+            return "redirect:/";
+        }
     }
 
     @GetMapping("/{id}/updateInfo")
@@ -57,8 +59,13 @@ public class UserController {
 
     @PatchMapping("/{id}/updateUser")
     public String showUpdatedUser(@PathVariable("id") int id, @Valid User user, BindingResult result) {
-        userService.updateUser(user);
-        return "redirect:/";
+        if (result.hasErrors()) {
+            user.setId(id);
+            return "updateUser";
+        } else {
+            userService.updateUser(user);
+            return "redirect:/";
+        }
     }
 
     @DeleteMapping("/{id}")
